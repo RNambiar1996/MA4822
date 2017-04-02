@@ -6,6 +6,7 @@ import cv2
 import socket 
 import struct
 import pickle
+import math
 
 #from shapeDetector import ShapeDetector
 
@@ -19,6 +20,9 @@ def angle(pt1,pt2,pt0):
     return float((dx1*dx2 + dy1*dy2))/math.sqrt(float((dx1*dx1 + dy1*dy1))*(dx2*dx2 + dy2*dy2) + 1e-10)
 
 def main():
+	
+	output_text = open("ouput.txt", "w")
+	
 
 	#dictionary of all contours
 	contours = {}
@@ -71,65 +75,58 @@ def main():
 	#initiate camera 
 	cap = cv2.VideoCapture(0)
 	
+	arduino.write("Start")
 	#loop
 	while cap.isOpened():
 		
 		shape = "UNKNOWN"
 		
 		#reading arduino data sent over serial	
-		ultrasound = arduino.readline()
+		mic = arduino.readline().rstrip()
+		print "Sound level: ", mic
+		output_text.write("Audio level: " + str(mic))
+		output_text.write("\n")
+			
+		
+		ultrasound = arduino.readline().rstrip()
+		print "ultrasound: ", ultrasound
+		output_text.write("Ultrasound reading: " + str(ultrasound))
+		output_text.write("\n") 
 		#removing end of line characters
-		try:
-			ultrasound = int(ultrsound.rstrip())
-			print("Distance to object: ", ultrasound)
-			print "\n"
+		#try:
+		#	ultrasound = int(ultrsound.rstrip())
+		#	print("Distance to object: ", ultrasound)
+		#	print "\n"
 
-		except:
-			ultrasound = 0
-			print " Ultrsound Error"
-			print "\n"
+		#except:
+		#	ultrasound = 0
+		#	print " Ultrsound Error"
+		#	print "\n"
 
-		temp = arduino.readline()
-		try:
-			temp = int(temp.rstrip())
-			print("Temperature: ", temp)
-			print "\n"
+		
+		pot = arduino.readline().rstrip()
+		print "Potentiometer: ", pot
+		output_text.write("Potentiometer reading: " + str(pot))
+		output_text.write("\n")
+	
+		
+		temp = arduino.readline().rstrip()
+		print "Temp: ", temp
+		output_text.write("Temperature reading: " + str(temp))
+		output_text.write("\n")
 
-		except:
-			temp = 0
-			print("Temp Error")
-			print "\n"
-
-		microphone = arduino.readline()
-		try:
-			microphone = microphone.rstrip() 	
-			print("Microphone reading: ", microphone)
-			print("\n")
-		except: 
-			microphone = 0
-			print "Microphone error"
-			print "\n"
-
-		wind_vel = arduino.readline()
-		try: 
-			wind_vel = (int)wind_vel.rstrip()
-			print("Wind velocity: ", wind_vel)
-			print "\n"
-
-		except: 
-			wind_vel = 0
-			print "Anemometer Error"
-			print "\n"
-
+		
+		
 		#plotting data 
 		
-		plt.scatter(x, ultrasound)
-		plt.scatter(x, temp)
-		plt.scatter(x, microphone)
-		plt.scatter(x, wind_vel)
-		x += 1
-		plt.pause(0.00001)
-
+		try:
+			plt.scatter(x, ultrasound)
+			x += 1
+			plt.pause(0.001)
+		
+		except: 
+			print "error"
+		
 		
 		ret, frame = cap.read()
 		#if image is read from camera
@@ -206,8 +203,6 @@ def main():
 				    cv2.drawContours(frame, contours[i], -1, (0,255,0), 2)
 				    detected = 1
 
-			print frame.shape[1]
-			print frame.shape[0]
 			if(detected == 1):
 				#cv2.imwrite("Detection" +str(counter) + ".png", frame)
 				#output_file.write("Detected " +str(shape) + " at " +str(x) +","+str(y))			

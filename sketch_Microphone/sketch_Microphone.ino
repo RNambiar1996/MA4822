@@ -60,6 +60,7 @@ void setup()
 
 void loop() 
 {
+
    unsigned long startMillis= millis();  // Start of sample window
    unsigned int peakToPeak = 0;   // peak-to-peak level
 
@@ -109,17 +110,17 @@ else
  
  
   if (distanceCm <= 0){
-    Serial.println("Out of range");
+    //Serial.println("Out of range");
   }
   else {
-    Serial.print("The distance of the obstacle is ");
-     Serial.print(distanceCm);
-    Serial.print(" cm");
-    Serial.println();
+    //Serial.print("The distance of the obstacle is ");
+     Serial.println(distanceCm);
+    //Serial.print(" cm");
+    //Serial.println();
   } 
 
 analogValue = analogRead(2);
-Serial.print("The potentiometer value is "); //Value between 0 to 1023
+//Serial.print("The potentiometer value is "); //Value between 0 to 1023
 Serial.println(analogValue);
 
 float temperature;
@@ -143,12 +144,11 @@ float temperature;
   sensor0.sleep();
 
   // Print temperature and alarm state
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.print(" C");
-  Serial.println();
-  Serial.println();
- delay(100);
+  //Serial.print("Temperature: ");
+  Serial.println(temperature);
+  //Serial.print(" C");
+  //Serial.println();
+  //Serial.println();
+ //delay(100);
 
- 
 }
