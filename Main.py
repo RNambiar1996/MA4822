@@ -77,21 +77,60 @@ def main():
 		shape = "UNKNOWN"
 		
 		#reading arduino data sent over serial	
-		data = arduino.readline()
+		ultrasound = arduino.readline()
 		#removing end of line characters
 		try:
-			data = int(data.rstrip())
-			print("Data: ", data)
+			ultrasound = int(ultrsound.rstrip())
+			print("Distance to object: ", ultrasound)
+			print "\n"
+
 		except:
-			data = 0
-			print "error"
+			ultrasound = 0
+			print " Ultrsound Error"
+			print "\n"
+
+		temp = arduino.readline()
+		try:
+			temp = int(temp.rstrip())
+			print("Temperature: ", temp)
+			print "\n"
+
+		except:
+			temp = 0
+			print("Temp Error")
+			print "\n"
+
+		microphone = arduino.readline()
+		try:
+			microphone = microphone.rstrip() 	
+			print("Microphone reading: ", microphone)
+			print("\n")
+		except: 
+			microphone = 0
+			print "Microphone error"
+			print "\n"
+
+		wind_vel = arduino.readline()
+		try: 
+			wind_vel = (int)wind_vel.rstrip()
+			print("Wind velocity: ", wind_vel)
+			print "\n"
+
+		except: 
+			wind_vel = 0
+			print "Anemometer Error"
+			print "\n"
 
 		#plotting data 
-		plt.scatter(x, data)
+		
+		plt.scatter(x, ultrasound)
+		plt.scatter(x, temp)
+		plt.scatter(x, microphone)
+		plt.scatter(x, wind_vel)
 		x += 1
-		plt.pause(0.001)
+		plt.pause(0.00001)
 
-
+		
 		ret, frame = cap.read()
 		#if image is read from camera
 		
